@@ -7,37 +7,7 @@
 
 def Xform "Root"
 {
-    reorder nameChildren = ["Sphere_Left", "Sphere_Right", "_PlainMaterial"]
-    def Sphere "Sphere_Right" (
-        active = true
-        prepend apiSchemas = ["MaterialBindingAPI"]
-    )
-    {
-        rel material:binding = </Root/_PlainMaterial/Material> (
-            bindMaterialAs = "weakerThanDescendants"
-        )
-        double radius = 0.1
-        quatf xformOp:orient = (1, 0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        float3 xformOp:translate = (0.5, 1.5, -1.5)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
-
-    def Sphere "Sphere_Left" (
-        active = true
-        prepend apiSchemas = ["MaterialBindingAPI"]
-    )
-    {
-        rel material:binding = </Root/_PlainMaterial/Material> (
-            bindMaterialAs = "weakerThanDescendants"
-        )
-        double radius = 0.1
-        quatf xformOp:orient = (1, 0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        float3 xformOp:translate = (-0.5, 1.5, -1.5)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
-
+    reorder nameChildren = ["Cube", "Sphere_Left", "Sphere_Right", "_PlainMaterial"]
     def "_PlainMaterial" (
         active = true
         prepend references = @_PlainMaterial.usda@
@@ -45,6 +15,35 @@ def Xform "Root"
     {
         float3 xformOp:scale = (1, 1, 1)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Cube "Cube" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+        customData = {
+            float3 rotationEulerHint = (0, -0.78539795, 0)
+        }
+    )
+    {
+        rel material:binding = </Root/Cube/DefaultMaterial>
+        double size = 0.2
+        quatf xformOp:orient = (0.92387956, 0, -0.38268337, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, -1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def Material "DefaultMaterial"
+        {
+            prepend token outputs:surface.connect = </Root/Cube/DefaultMaterial/DefaultSurfaceShader.outputs:surface>
+
+            def Shader "DefaultSurfaceShader"
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (1, 1, 1)
+                float inputs:roughness = 0.75
+                token outputs:surface
+            }
+        }
     }
 }
 
