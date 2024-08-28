@@ -9,6 +9,10 @@ import SwiftUI
 
 @main
 struct SpaceCubesApp: App {
+    
+    // var for fully immersive view
+    @State private var currentStyle: ImmersionStyle = .mixed
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -17,5 +21,6 @@ struct SpaceCubesApp: App {
         ImmersiveSpace(id: "ImmersiveSpace") {
             ImmersiveView()
         }
+        .immersionStyle(selection: $currentStyle, in: .mixed)
     }
 }
